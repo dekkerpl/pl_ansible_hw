@@ -1,5 +1,5 @@
 ---
-- name: Papp Laszlo - Ansible - HomeWork
+- name: PL Ansible HomeWork
   hosts: all
   become: yes
   
