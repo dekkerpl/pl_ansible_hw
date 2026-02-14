@@ -1,1 +1,39 @@
+---
+- name: Papp Laszlo - Ansible - HomeWork
+  hosts: all
+  become: yes
+  
+  tasks:
 
+    - name: Telepítse az Nginx csomagot
+      package:
+        name: nginx
+        state: present
+  
+    - name: Nginx inditása es automatikus indulás beallítása
+      service:
+        name: nginx
+        state: started
+        enabled: yes    
+    
+    - name: Másolja át az index.html fájlt a nginx mappába
+      template:
+        src: index.html
+        dest: /usr/share/nginx/html/index.html
+      notify: Restart Nginx
+
+    - name: Permanently enable http service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+        offline: true
+      when:
+        - ansible_distribution == "Rocky"
+ 
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
